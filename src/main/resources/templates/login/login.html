@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <link th:href="@{/css/bootstrap.min.css}"
+        href="css/bootstrap.min.css" rel="stylesheet">
+  <title>8784</title>
+  <style>
+    .container {
+      max-width: 560px;
+    }
+    .field-error {
+      border-color: #dc3545;
+      color: #dc3545;
+    }
+  </style>
+</head>
+
+<body>
+<div th:insert="~{fragment/nav :: nav}"></div>
+<div class="container">
+  <div class="py-5 text-center">
+    <h2>ログイン</h2>
+  </div>
+  <form th:action th:object="${loginDto}" method="post">
+    <div th:if="${#fields.hasGlobalErrors()}">
+      <p class="field-error" th:each="err : ${#fields.globalErrors()}"
+         th:text="${err}">전체 오류 메시지</p>
+    </div>
+    <div>
+      <label for="studentId">ID</label>
+      <input type="text" id="studentId" th:field="*{id}" class="form-control"
+             th:errorclass="field-error">
+      <div class="field-error" th:errors="*{id}"/>
+    </div>
+    <div class="mt-2">
+      <label for="password">パスワード</label>
+      <input type="password" id="password" th:field="*{pw}"
+             class="form-control"
+             th:errorclass="field-error">
+      <div class="field-error" th:errors="*{pw}"/>
+    </div>
+    <hr class="my-4">
+    <div class="row">
+      <div class="col">
+        <button class="w-100 btn btn-primary btn-lg" type="submit">
+          ログインする</button>
+      </div>
+    </div>
+  </form>
+</div> <!-- /container -->
+</body>
+</html>

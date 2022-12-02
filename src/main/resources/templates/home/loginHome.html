@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="css/bootstrap.min.css" rel="stylesheet">
+    <title>8784</title>
+</head>
+
+<body>
+    <div th:insert="~{fragment/nav :: nav}"></div>
+    <div class="container">
+        <div class="col">
+            <div class="py-5 text-center">
+                <h1>8784 - Manager Page</h1>
+            </div>
+            <div class="text-center">
+                <button class="w-50 btn btn-primary btn-lg my-3"
+                        th:onclick="|location.href='@{/item/add}'|" type="button">
+                    商品登録
+                </button>
+            </div>
+            <div class="text-center">
+                <button class="w-50 btn btn-success btn-lg my-3"
+                        th:onclick="|location.href='@{/item/list}'|" type="button">
+                    商品リスト
+                </button>
+            </div>
+            <div class="text-center">
+                <button class="w-50 btn btn-warning btn-lg my-3"
+                        th:onclick="|location.href='@{/item/sale}'|" type="button">
+                    販売管理
+                </button>
+            </div>
+            <div class="text-center">
+                <form th:action="@{/logout}" method="post">
+                    <button class="w-50 btn btn-secondary btn-lg my-3"
+                            type="submit">
+                        ログアウト
+                    </button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
