@@ -1,8 +1,8 @@
 package com.palchil.shop.service;
 
-import com.palchil.shop.domain.User;
+import com.palchil.shop.domain.entity.User;
 import com.palchil.shop.repository.UserRepository;
-import com.palchil.shop.web.dto.user.LoginDto;
+import com.palchil.shop.domain.dto.user.LoginDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

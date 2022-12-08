@@ -1,4 +1,4 @@
-package com.palchil.shop.web.dto.user;
+package com.palchil.shop.domain.dto.user;
 
 import lombok.Data;
 

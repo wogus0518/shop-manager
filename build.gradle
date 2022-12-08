@@ -22,6 +22,9 @@ dependencies {
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// QR코드 생성
+	implementation 'com.google.zxing:zxingorg:3.5.0'
 }
 
 tasks.named('test') {

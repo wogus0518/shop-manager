@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <link th:href="@{/css/bootstrap.min.css}"
+        href="css/bootstrap.min.css" rel="stylesheet">
+  <title>8784</title>
+  <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+  <script th:inline="javascript">
+    $(document).ready (function () {
+      $('.btnAdd').click (function () {
+        $('.buttons').append (
+                '    <tr class="trRemover">\n' +
+                '      <td><input type="text" name="purchaseDate"></td>\n' +
+                '      <td><input type="text" name="store"></td>\n' +
+                '      <td><input type="text" name="buyName"></td>\n' +
+                '      <td><input type="text" name="saleName"></td>\n' +
+                '      <td><input type="text" name="color"></td>\n' +
+                '      <td>\n' +
+                '        <select name="category">\n' +
+                '          <option value="">==카테고리 선택==</option>\n' +
+                '          <option value="OUTER">아우터</option>\n' +
+                '          <option value="DRESS">원피스</option>\n' +
+                '          <option value="SWEATER">스웨터</option>\n' +
+                '          <option value="SHIRT">셔츠</option>\n' +
+                '          <option value="PANT">바지</option>\n' +
+                '          <option value="SKIRT">치마</option>\n' +
+                '          <option value="SHOE">신발</option>\n' +
+                '          <option value="ACC">악세사리</option>\n' +
+                '        </select>\n' +
+                '      </td>\n' +
+                '      <td>\n' +
+                '        <select name="size">\n' +
+                '          <option value="">==사이즈 선택==</option>\n' +
+                '          <option value="F">Free</option>\n' +
+                '          <option value="S">Small</option>\n' +
+                '          <option value="M">Medium</option>\n' +
+                '          <option value="L">Large</option>\n' +
+                '          <option value="SHOE_225">225</option>\n' +
+                '          <option value="SHOE_230">230</option>\n' +
+                '          <option value="SHOE_235">235</option>\n' +
+                '          <option value="SHOE_240">240</option>\n' +
+                '        </select>\n' +
+                '      </td>\n' +
+                '      <td>\n' +
+                '        <select name="gender">\n' +
+                '          <option value="">==성별 선택==</option>\n' +
+                '          <option value="MAN">남자</option>\n' +
+                '          <option value="WOMAN">여자</option>\n' +
+                '          <option value="BOTH">공용</option>\n' +
+                '        </select>\n' +
+                '      </td>\n' +
+                '      <td width="50"><input type="text" name="quantity"></td>\n' +
+                '      <td><input type="text" name="unitCost"></td>\n' +
+                '      <td><input type="text" name="price"></td>\n' +
+                '      <td><input type="button" class="btnRemove" value="Remove"></td>\n' +
+                '    </tr>'
+        ); // end append
+        $('.btnRemove').on('click', function () {
+          console.log($(this).parents("tr"));
+          $(this).parents("tr").remove();
+        });
+      }); // end click
+    }); // end ready
+  </script>
+
+
+</head>
+
+<body>
+<div th:insert="~{fragment/nav :: nav}"></div>
+<form th:action method="POST">
+  <table class="buttons">
+    <tr>
+      <th>사입 날짜</th>
+      <th>상점 이름</th>
+      <th>구매명</th>
+      <th>판매명</th>
+      <th>색상</th>
+      <th>카테고리</th>
+      <th>사이즈</th>
+      <th>성별</th>
+      <th>수량</th>
+      <th>원가</th>
+      <th>판매가격</th>
+      <th>행 추가/삭제</th>
+    </tr>
+    <tr class="table-info">
+      <td><input type="text" name="purchaseDate"></td>
+      <td><input type="text" name="store"></td>
+      <td><input type="text" name="buyName"></td>
+      <td><input type="text" name="saleName"></td>
+      <td><input type="text" name="color"></td>
+      <td>
+        <select name="category">
+          <option value="">==카테고리 선택==</option>
+          <option th:each="category : ${categories}" th:value="${category.name()}" th:text="${category.getDescription()}"></option>
+        </select>
+      </td>
+      <td>
+        <select name="size">
+          <option value="">==사이즈 선택==</option>
+          <option th:each="size : ${sizes}" th:value="${size.name()}" th:text="${size.getDescription()}"></option>
+        </select>
+      </td>
+      <td>
+        <select name="gender">
+          <option value="">==성별 선택==</option>
+          <option th:each="gender : ${genders}" th:value="${gender.name()}" th:text="${gender.getDescription()}"></option>
+        </select>
+      </td>
+      <td><input width="10px" type="text" name="quantity"></td>
+      <td><input type="text" name="unitCost"></td>
+      <td><input type="text" name="price"></td>
+      <td><input type="button" class="btnAdd" value="Add"></td>
+    </tr>
+  </table>
+  <button type="submit">저장</button>
+</form>
+</body>
+</html>

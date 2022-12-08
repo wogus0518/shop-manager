@@ -1,8 +1,8 @@
 package com.palchil.shop.controller;
 
-import com.palchil.shop.domain.User;
+import com.palchil.shop.domain.entity.User;
 import com.palchil.shop.service.LoginService;
-import com.palchil.shop.web.dto.user.LoginDto;
+import com.palchil.shop.domain.dto.user.LoginDto;
 import com.palchil.shop.web.session.SessionConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
