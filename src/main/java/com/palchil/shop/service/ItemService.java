@@ -5,10 +5,15 @@ import com.palchil.shop.domain.dto.item.AddItemDto;
 import com.palchil.shop.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -21,6 +26,34 @@ public class ItemService {
 
     @Transactional
     public void addItem(AddItemDto addItemDto) throws IOException {
+
+        List<AddItemDto> addItemDtoList = parser(addItemDto);
+
+        for (AddItemDto dto : addItemDtoList) {
+            Item item = dto.toEntity();
+
+            //DB에 일치하는 상품이 있는지 조회
+            Optional<Item> sameItem = itemRepository.findSameItem(item.getStore(), item.getBuyName(), item.getColor(), item.getSize(), item.getUnitCost());
+
+            //일치하는 상품이 있으면 quantity만 증가
+            sameItem.ifPresent(i -> i.addQuantity(item.getQuantity()));
+
+            //없으면 새롭게 상품등록
+            if (sameItem.isEmpty()) {
+                Item savedItem = itemRepository.save(item);
+                String base64 = qrCodeService.createQr(savedItem.getId()).toString();
+                savedItem.setBase64(base64);
+            }
+        }
+    }
+
+    public Page<Item> findAll(Pageable pageable) {
+        return itemRepository.findAll(pageable);
+    }
+
+    private List<AddItemDto> parser(AddItemDto addItemDto) {
+        List<AddItemDto> list = new ArrayList<>();
+
         String[] purchaseDates = addItemDto.getPurchaseDate().split(",");
         String[] stores = addItemDto.getStore().split(",");
         String[] buyNames = addItemDto.getBuyName().split(",");
@@ -33,10 +66,11 @@ public class ItemService {
         String[] unitCosts = addItemDto.getUnitCost().split(",");
         String[] prices = addItemDto.getPrice().split(",");
 
-        for (int i = 0; i < stores.length; i++) {
-            Item item = itemRepository.save(new AddItemDto(purchaseDates[i], stores[i], buyNames[i], saleNames[i], colors[i], categories[i], sizes[i], genders[i], quantities[i], unitCosts[i], prices[i]).toEntity());
-            String base64 = qrCodeService.createQr(item.getId()).toString();
-            item.setBase64(base64);
+        for (int i = 0; i < purchaseDates.length; i++) {
+            list.add(new AddItemDto(purchaseDates[i], stores[i], buyNames[i], saleNames[i], colors[i],
+                    categories[i], sizes[i], genders[i], quantities[i], unitCosts[i], prices[i]));
         }
+
+        return list;
     }
 }

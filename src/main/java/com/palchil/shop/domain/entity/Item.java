@@ -3,6 +3,7 @@ package com.palchil.shop.domain.entity;
 import com.palchil.shop.domain.enumerate.Category;
 import com.palchil.shop.domain.enumerate.Gender;
 import com.palchil.shop.domain.enumerate.Size;
+import com.palchil.shop.exception.NotEnoughStockException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,7 +18,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class Item {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String purchaseDate;
     private String store;
@@ -38,10 +39,36 @@ public class Item {
     private Gender gender;
 
     private Integer quantity;
+    private Integer stock;
     private Integer unitCost;
     private Integer price;
 
     public void setBase64(String base64) {
         this.base64 = base64;
+    }
+
+    //==비즈니스 로직==//
+    public void addStock(int q) {
+        this.stock += q;
+    }
+
+    public void removeStock(int q) {
+        int restStock = this.stock - q;
+        if (restStock < 0) {
+            throw new NotEnoughStockException("need more stock");
+        }
+        this.stock = restStock;
+    }
+
+    public void addQuantity(int q) {
+        this.quantity += q;
+    }
+
+    public void removeQuantity(int q) {
+        int restQuantity = this.quantity - q;
+        if (restQuantity < 0) {
+            throw new NotEnoughStockException("need more stock");
+        }
+        this.quantity = restQuantity;
     }
 }
