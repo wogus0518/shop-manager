@@ -36,12 +36,12 @@
       <td th:text="${item.id}"></td>
       <td th:text="${item.purchaseDate}"></td>
       <td th:text="${item.store}"></td>
-      <td><a th:href="@{/item/list/${item.id}}" th:text="${item.buyName}"></a></td>
-      <td><a th:href="@{/item/list/${item.id}}" th:text="${item.saleName}"></a></td>
+      <td><a th:href="@{/item/list/{id}(id = ${item.id})}" th:text="${item.buyName}"></a></td>
+      <td><a th:href="@{/item/list/{id}(id = ${item.id})}" th:text="${item.saleName}"></a></td>
       <td th:text="${item.color}"></td>
-      <td th:text="${item.category}"></td>
-      <td th:text="${item.size}"></td>
-      <td th:text="${item.gender}"></td>
+      <td th:text="${item.category.getDescription()}"></td>
+      <td th:text="${item.size.getDescription()}"></td>
+      <td th:text="${item.gender.getDescription()}"></td>
       <td th:text="${item.quantity}"></td>
       <td th:text="${item.unitCost}"></td>
       <td th:text="${item.price}"></td>

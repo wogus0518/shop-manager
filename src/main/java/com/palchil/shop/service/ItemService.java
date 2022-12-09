@@ -1,5 +1,6 @@
 package com.palchil.shop.service;
 
+import com.palchil.shop.domain.dto.item.ItemDto;
 import com.palchil.shop.domain.entity.Item;
 import com.palchil.shop.domain.dto.item.AddItemDto;
 import com.palchil.shop.repository.ItemRepository;
@@ -35,8 +36,11 @@ public class ItemService {
             //DB에 일치하는 상품이 있는지 조회
             Optional<Item> sameItem = itemRepository.findSameItem(item.getStore(), item.getBuyName(), item.getColor(), item.getSize(), item.getUnitCost());
 
-            //일치하는 상품이 있으면 quantity만 증가
-            sameItem.ifPresent(i -> i.addQuantity(item.getQuantity()));
+            //일치하는 상품이 있으면 quantity, stock 증가
+            sameItem.ifPresent(i -> {
+                i.addQuantity(item.getQuantity());
+                i.addStock(item.getQuantity());
+            });
 
             //없으면 새롭게 상품등록
             if (sameItem.isEmpty()) {
@@ -72,5 +76,19 @@ public class ItemService {
         }
 
         return list;
+    }
+
+    public Item findOne(Long id) {
+        Optional<Item> optionalItem = itemRepository.findById(id);
+        return optionalItem.get();
+    }
+
+    @Transactional
+    public Item update(ItemDto itemDto) {
+        Optional<Item> optionalItem = itemRepository.findById(itemDto.getId());
+        itemDto.setBase64(optionalItem.get().getBase64());
+        Item item = itemDto.toEntity();
+        log.info("item={}", item.toString());
+        return itemRepository.save(itemDto.toEntity());
     }
 }

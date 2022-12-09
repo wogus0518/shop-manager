@@ -1,19 +1,18 @@
 package com.palchil.shop.domain.entity;
 
+import com.palchil.shop.domain.dto.item.ItemDto;
 import com.palchil.shop.domain.enumerate.Category;
 import com.palchil.shop.domain.enumerate.Gender;
 import com.palchil.shop.domain.enumerate.Size;
 import com.palchil.shop.exception.NotEnoughStockException;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
 @Builder
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class Item {
@@ -45,6 +44,25 @@ public class Item {
 
     public void setBase64(String base64) {
         this.base64 = base64;
+    }
+
+    public ItemDto toDto() {
+        return ItemDto.builder()
+                .id(id)
+                .base64(base64)
+                .purchaseDate(this.purchaseDate)
+                .store(this.store)
+                .buyName(buyName)
+                .saleName(saleName)
+                .color(color)
+                .category(this.category.getDescription())
+                .size(size.getDescription())
+                .gender(gender.getDescription())
+                .quantity(String.valueOf(quantity))
+                .unitCost(String.valueOf(unitCost))
+                .price(String.valueOf(price))
+                .stock(String.valueOf(stock))
+                .build();
     }
 
     //==비즈니스 로직==//

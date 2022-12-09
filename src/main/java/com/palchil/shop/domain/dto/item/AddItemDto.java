@@ -36,6 +36,7 @@ public class AddItemDto {
                 .unitCost(Integer.parseInt(this.unitCost))
                 .price(Integer.parseInt(this.price))
                 .base64(null)
+                .stock(Integer.parseInt(this.quantity))
                 .build();
     }
 }

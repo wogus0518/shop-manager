@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="css/bootstrap.min.css" rel="stylesheet">
+    <title>8784</title>
+</head>
+
+<body>
+<div th:insert="~{fragment/nav :: nav}"></div>
+<div class="container">
+    <div class="py-5 text-center">
+        <h1>詳細ページ</h1>
+    </div>
+
+    <form th:object="${item}" th:action method="POST">
+        <div class="text-center">
+            <h3 for="qrCode">QR コード</h3>
+            <img id="qrCode" th:src="|data:image/png;base64,${item.base64}|"/>
+        </div>
+
+        <div class="container">
+            <table class="mx-auto mb-2">
+                <tbody>
+                <tr>
+                    <td>
+                        <div>
+                            <label for="purchaseDate">사입 날짜</label>
+                            <input type="text" id="purchaseDate" th:field="*{purchaseDate}" class="form-control">
+                        </div>
+                    </td>
+                    <td>
+                        <label for="category">카테고리</label>
+                        <select name="category" class="form-select">
+                            <option value="">==카테고리 선택==</option>
+                            <option th:each="category : ${categories}" th:value="${category.name()}" th:text="${category.getDescription()}"
+                            th:selected="${item.category.name()} == ${category.name()}"></option>
+                        </select>
+                    </td>
+                    <td>
+                        <div>
+                            <label for="store">상점명</label>
+                            <input type="text" id="store" th:field="*{store}" class="form-control">
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <table class="mx-auto mb-2">
+                <tbody>
+                <tr>
+                    <td>
+                        <div>
+                            <label for="buyName">구매명</label>
+                            <input type="text" id="buyName" th:field="*{buyName}" class="form-control">
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <label for="saleName">판매명</label>
+                            <input type="text" id="saleName" th:field="*{saleName}" class="form-control">
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <label for="price">판매가</label>
+                            <input type="text" id="price" th:field="*{price}" class="form-control">
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <table class="mx-auto mb-2">
+                <tbody>
+                <tr>
+                    <td>
+                        <div>
+                            <label for="color">색상</label>
+                            <input type="text" id="color" th:field="*{color}" class="form-control">
+                        </div>
+                    </td>
+                    <td>
+                        <label for="size">사이즈</label>
+                        <select name="size" class="form-select">
+                            <option value="">===사이즈 선택===</option>
+                            <option th:each="size : ${sizes}" th:value="${size.name()}" th:text="${size.getDescription()}"
+                                    th:selected="${item.size.name()} == ${size.name()}"></option>
+                        </select>
+                    </td>
+                    <td>
+                        <label for="gender">성별</label>
+                        <select name="gender" class="form-select">
+                            <option value="">===성별 선택===</option>
+                            <option th:each="gender : ${genders}" th:value="${gender.name()}" th:text="${gender.getDescription()}"
+                                    th:selected="${item.gender.name()} == ${gender.name()}"></option>
+                        </select>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <table class="mx-auto mb-2">
+                <tbody>
+                <tr>
+                    <td>
+                        <div>
+                            <label for="quantity">구매량</label>
+                            <input type="text" id="quantity" th:field="*{quantity}" class="form-control">
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <label for="unitCost">원가</label>
+                            <input type="text" id="unitCost" th:field="*{unitCost}" class="form-control">
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <label for="stock">재고</label>
+                            <input type="text" id="stock" th:field="*{stock}" class="form-control">
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="text-center">
+            <button class="w-25 btn btn-success btn-lg my-3" type="submit">
+                저장
+            </button>
+        </div>
+    </form>
+</body>
+</html>

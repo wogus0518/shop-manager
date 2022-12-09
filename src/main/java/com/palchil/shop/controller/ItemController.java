@@ -1,6 +1,7 @@
 package com.palchil.shop.controller;
 
 
+import com.palchil.shop.domain.dto.item.ItemDto;
 import com.palchil.shop.domain.entity.Item;
 import com.palchil.shop.domain.enumerate.Category;
 import com.palchil.shop.domain.enumerate.Gender;
@@ -45,8 +46,6 @@ public class ItemController {
     public String itemList(Model model,
                            @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<Item> items = itemService.findAll(pageable);
-        log.info("number={}", items.getNumber());
-        log.info("totalPages={}", items.getTotalPages());
 
         model.addAttribute("itemList", items);
 
@@ -54,5 +53,32 @@ public class ItemController {
         if(items.hasNext()) model.addAttribute("next", pageable.next().getPageNumber());
 
         return "item/list";
+    }
+
+    @GetMapping("/list/{id}")
+    public String itemOne(@PathVariable Long id, Model model) {
+        Item item = itemService.findOne(id);
+        model.addAttribute("item", item.toDto());
+        return "item/one";
+    }
+
+    @GetMapping("/modify/{id}")
+    public String itemModify(@PathVariable Long id, Model model) {
+        Item item = itemService.findOne(id);
+
+        model.addAttribute("genders", Gender.values());
+        model.addAttribute("categories", Category.values());
+        model.addAttribute("sizes", Size.values());
+        model.addAttribute("item", item);
+        return "item/modify";
+    }
+
+    @PostMapping("/modify/{id}")
+    public String update(@PathVariable Long id, ItemDto itemDto, Model model) {
+        log.info("CONTROLLER START");
+        itemDto.setId(id);
+        Item updateItem = itemService.update(itemDto);
+
+        return "redirect:/item/list/" + id;
     }
 }
