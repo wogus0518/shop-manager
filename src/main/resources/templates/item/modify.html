@@ -1,14 +1,5 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <link th:href="@{/css/bootstrap.min.css}"
-          href="css/bootstrap.min.css" rel="stylesheet">
-    <title>8784</title>
-</head>
-
+<html th:replace="~{template/layoutExtend/layoutFile :: layout(~{::body})}" xmlns:th="http://www.thymeleaf.org">
 <body>
-<div th:insert="~{fragment/nav :: nav}"></div>
 <div class="container">
     <div class="py-5 text-center">
         <h1>詳細ページ</h1>

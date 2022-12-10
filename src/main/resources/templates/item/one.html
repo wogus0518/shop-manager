@@ -1,22 +1,13 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <link th:href="@{/css/bootstrap.min.css}"
-          href="css/bootstrap.min.css" rel="stylesheet">
-    <title>8784</title>
-</head>
-
+<html th:replace="~{template/layoutExtend/layoutFile :: layout(~{::body})}" xmlns:th="http://www.thymeleaf.org">
 <body>
-<div th:insert="~{fragment/nav :: nav}"></div>
 <div class="container">
     <div class="py-5 text-center">
-        <h1>詳細ページ</h1>
+        <h1>상세 페이지</h1>
     </div>
 
     <form th:object="${item}">
         <div class="text-center">
-            <h3 for="qrCode">QR コード</h3>
+            <h3 for="qrCode">QR CODE</h3>
             <img id="qrCode" th:src="|data:image/png;base64,${item.base64}|"/>
         </div>
 
@@ -124,20 +115,21 @@
         </div>
     </form>
 
-    <div class="row text-center">
-        <div class="col-md-6 m-auto">
-            <button class="w-100 btn btn-success btn-lg my-3"
-                    th:onclick="|location.href='@{/item/modify/{id}(id=${item.id})}'|" type="button">
-                修正する
-            </button>
-        </div>
-        <div class="col-md-6 m-auto">
-            <button class="w-100 btn btn-warning btn-lg my-3"
-                    th:onclick="|location.href='@{/item/list}'|" type="button">
-                商品リスト
-            </button>
-        </div>
+    <div class="text-center">
+        <button class="w-50 btn btn-success btn-lg my-2"
+                th:onclick="|location.href='@{/item/list}'|" type="button">
+            판매
+        </button>
+        <button class="w-50 btn btn-warning btn-lg my-2"
+                th:onclick="|location.href='@{/item/modify/{id}(id=${item.id})}'|" type="button">
+            수정
+        </button>
+        <button class="w-50 btn btn-danger btn-lg my-2"
+                th:onclick="|location.href='@{/item/list}'|" type="button">
+            삭제
+        </button>
     </div>
+
 
 </body>
 </html>
