@@ -3,7 +3,9 @@ package com.palchil.shop.service;
 import com.palchil.shop.domain.dto.item.ItemDto;
 import com.palchil.shop.domain.entity.Item;
 import com.palchil.shop.domain.dto.item.AddItemDto;
+import com.palchil.shop.domain.enumerate.Category;
 import com.palchil.shop.repository.ItemRepository;
+import com.palchil.shop.repository.specification.ItemSpec;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -24,6 +26,7 @@ public class ItemService {
 
     private final ItemRepository itemRepository;
     private final QrCodeService qrCodeService;
+
 
     @Transactional
     public void addItem(AddItemDto addItemDto) throws IOException {
@@ -51,9 +54,42 @@ public class ItemService {
         }
     }
 
+    @Transactional
+    public Item update(ItemDto itemDto) {
+        Optional<Item> optionalItem = itemRepository.findById(itemDto.getId());
+        itemDto.setBase64(optionalItem.get().getBase64());
+        Item item = itemDto.toEntity();
+        log.info("item={}", item.toString());
+        return itemRepository.save(itemDto.toEntity());
+    }
+
+
+
     public Page<Item> findAll(Pageable pageable) {
         return itemRepository.findAll(pageable);
     }
+
+    public Page<Item> findAllWithOption(Pageable pageable, String store, String saleName, String category) {
+        return itemRepository.findAll(ItemSpec.searchWith(store, saleName, category), pageable);
+    }
+
+    public Item findOne(Long id) {
+        Optional<Item> optionalItem = itemRepository.findById(id);
+        return optionalItem.get();
+    }
+
+    public Page<Item> findBySaleName(String saleName, Pageable pageable) {
+        return itemRepository.findBySaleNameContaining(pageable, saleName);
+    }
+
+    public Page<Item> findBySaleNameAndStore(Pageable pageable, String saleName, String store) {
+        return itemRepository.findBySaleNameContainingAndStoreContaining(pageable, saleName, store);
+    }
+
+    public Page<Item> findByStore(String store, Pageable pageable) {
+        return itemRepository.findByStoreContaining(pageable, store);
+    }
+
 
     private List<AddItemDto> parser(AddItemDto addItemDto) {
         List<AddItemDto> list = new ArrayList<>();
@@ -76,19 +112,5 @@ public class ItemService {
         }
 
         return list;
-    }
-
-    public Item findOne(Long id) {
-        Optional<Item> optionalItem = itemRepository.findById(id);
-        return optionalItem.get();
-    }
-
-    @Transactional
-    public Item update(ItemDto itemDto) {
-        Optional<Item> optionalItem = itemRepository.findById(itemDto.getId());
-        itemDto.setBase64(optionalItem.get().getBase64());
-        Item item = itemDto.toEntity();
-        log.info("item={}", item.toString());
-        return itemRepository.save(itemDto.toEntity());
     }
 }

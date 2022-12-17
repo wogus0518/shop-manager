@@ -24,7 +24,7 @@ public class LoginController {
 
     @GetMapping
     public String viewLogin(@ModelAttribute LoginDto loginDto) {
-        return "login/login";
+        return "adminPage/loginPage";
     }
 
     @PostMapping
@@ -34,14 +34,14 @@ public class LoginController {
                         @RequestParam(defaultValue = "/") String redirectURL) { // 없을 때 뒤에 계속 /null 붙음
         if (bindingResult.hasErrors()) {
             log.info("errors={}", bindingResult);
-            return "login/login";
+            return "adminPage/loginPage";
         }
         User loginUser = loginService.login(loginDto);
         if (loginUser == null) {
             bindingResult.reject("loginFail", "IDとパスワードが一致しません。");
             log.info("errors={}", bindingResult);
 
-            return "login/login";
+            return "adminPage/loginPage";
         }
 
         //로그인 성공

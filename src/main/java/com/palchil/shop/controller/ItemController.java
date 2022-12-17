@@ -12,13 +12,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Enumeration;
 
 @Slf4j
 @Controller
@@ -30,55 +31,73 @@ public class ItemController {
 
     @GetMapping("/add")
     public String addView(Model model) {
-        model.addAttribute("genders", Gender.values());
-        model.addAttribute("categories", Category.values());
-        model.addAttribute("sizes", Size.values());
-        return "item/add";
+        addAttributeEnum(model);
+        return "adminPage/itemAdd";
     }
 
     @PostMapping("/add")
     public String addItem(AddItemDto addItemDto) throws IOException {
         itemService.addItem(addItemDto);
-        return "item/add";
+        return "adminPage/itemAdd";
     }
 
     @GetMapping("/list")
-    public String itemList(Model model,
-                           @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<Item> items = itemService.findAll(pageable);
-
+    public String itemList(Model model, Pageable pageable,
+                           @RequestParam(required = false) String saleName,
+                           @RequestParam(required = false) String store,
+                           @RequestParam(required = false) String category) {
+        Page<Item> items = itemService.findAllWithOption(pageable, store, saleName, category);
         model.addAttribute("itemList", items);
 
         if(pageable.hasPrevious()) model.addAttribute("previous", pageable.previousOrFirst().getPageNumber());
         if(items.hasNext()) model.addAttribute("next", pageable.next().getPageNumber());
 
-        return "item/list";
+        return "adminPage/itemList";
+    }
+
+    //상점명, 판매명으로 검색하는 POST 요청이 왔을 때
+    @PostMapping("/list")
+    public String search(@RequestParam(required = false) String saleName,
+                         @RequestParam(required = false) String store,
+                         RedirectAttributes redirectAttributes) {
+        if(!saleName.isEmpty()) redirectAttributes.addAttribute("saleName", saleName);
+        if(!store.isEmpty()) redirectAttributes.addAttribute("store", store);
+        return "redirect:/item/list";
     }
 
     @GetMapping("/list/{id}")
     public String itemOne(@PathVariable Long id, Model model) {
         Item item = itemService.findOne(id);
         model.addAttribute("item", item.toDto());
-        return "item/one";
+        return "adminPage/itemOne";
     }
 
     @GetMapping("/modify/{id}")
     public String itemModify(@PathVariable Long id, Model model) {
         Item item = itemService.findOne(id);
-
-        model.addAttribute("genders", Gender.values());
-        model.addAttribute("categories", Category.values());
-        model.addAttribute("sizes", Size.values());
         model.addAttribute("item", item);
-        return "item/modify";
+
+        addAttributeEnum(model);
+
+        return "adminPage/itemUpdate";
     }
 
     @PostMapping("/modify/{id}")
-    public String update(@PathVariable Long id, ItemDto itemDto, Model model) {
-        log.info("CONTROLLER START");
+    public String update(@PathVariable Long id, ItemDto itemDto) {
         itemDto.setId(id);
-        Item updateItem = itemService.update(itemDto);
+        itemService.update(itemDto);
 
         return "redirect:/item/list/" + id;
+    }
+
+    /**
+     * 편의 메서드
+     */
+
+    //thymeleaf에서 필요한 Enum을 Model에 넣어주는 메서드
+    private static void addAttributeEnum(Model model) {
+        model.addAttribute("genders", Gender.values());
+        model.addAttribute("categories", Category.values());
+        model.addAttribute("sizes", Size.values());
     }
 }

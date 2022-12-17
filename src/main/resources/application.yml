@@ -4,9 +4,12 @@ spring:
   thymeleaf:
     prefix: classpath:/templates/
     cache: false
+    suffix: .html
+    check-template-location: true
   freemarker:
     cache: false
-
+  mvc:
+    static-path-pattern: "/static/**"
   #  mvc:
 #    hiddenmethod:
 #      filter:

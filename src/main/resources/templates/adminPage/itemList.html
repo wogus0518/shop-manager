@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html th:replace="~{template/layoutExtend/layoutFile :: layout(~{::body})}" xmlns:th="http://www.thymeleaf.org">
+
+<body th:with="store=${#request.getParameter('store')},
+               saleName=${#request.getParameter('saleName')},
+               category=${#request.getParameter('category')},
+               sortBy=${#request.getParameter('sortBy')}">
+
+<form class="container" th:action="@{/item/list}" method="POST">
+    <table class="table table-borderless">
+        <tr>
+            <td>
+                <div class="mb-3 row">
+                    <label class="col-sm-2 col-form-label">상점명</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="store" th:value="${store}">
+                    </div>
+                </div>
+            </td>
+            <td rowspan="2" class="text-center align-middle px-auto">
+                <button type="submit" class="btn btn-primary btn-lg">조회</button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="mb-3 row">
+                    <label class="col-sm-2 col-form-label">판매명</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="saleName" th:value="${saleName}">
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</form>
+
+<div>
+    <button th:class="(${sortBy}=='id-desc') ? 'btn btn-secondary btn-sm' : 'btn btn-success btn-sm'"
+            th:onclick="|location.href='@{/item/list(store=${store}, saleName=${saleName}, category=${category}, sortBy=id-desc)}'|">
+        등록 최신 순
+    </button>
+    <button th:class="(${sortBy}=='stock-asc') ? 'btn btn-secondary btn-sm' : 'btn btn-success btn-sm'"
+            th:onclick="|location.href='@{/item/list(store=${store}, saleName=${saleName}, category=${category}, sortBy=stock-asc)}'|">
+        재고량 적은 순
+    </button>
+    <button th:class="(${sortBy}=='quantity-desc') ? 'btn btn-secondary btn-sm' : 'btn btn-success btn-sm'"
+            th:onclick="|location.href='@{/item/list(store=${store}, saleName=${saleName}, category=${category}, sortBy=quantity-desc)}'|">
+        구매량 많은 순
+    </button>
+</div>
+<div>
+    <button th:class="(${category}=='OUTER') ? 'btn btn-secondary btn-sm mt-2' : 'btn btn-danger btn-sm mt-2'"
+            th:onclick="|location.href='@{/item/list(store=${store}, saleName=${saleName}, sortBy=${sortBy}, category=OUTER)}'|">
+        아우터
+    </button>
+    <button th:class="(${category}=='DRESS') ? 'btn btn-secondary btn-sm mt-2' : 'btn btn-danger btn-sm mt-2'"
+            th:onclick="|location.href='@{/item/list(store=${store}, saleName=${saleName}, sortBy=${sortBy}, category=DRESS)}'|">
+        원피스
+    </button>
+    <button th:class="(${category}=='SWEATER') ? 'btn btn-secondary btn-sm mt-2' : 'btn btn-danger btn-sm mt-2'"
+            th:onclick="|location.href='@{/item/list(store=${store}, saleName=${saleName}, sortBy=${sortBy}, category=SWEATER)}'|">
+        스웨터
+    </button>
+    <button th:class="(${category}=='SHIRT') ? 'btn btn-secondary btn-sm mt-2' : 'btn btn-danger btn-sm mt-2'"
+            th:onclick="|location.href='@{/item/list(store=${store}, saleName=${saleName}, sortBy=${sortBy}, category=SHIRT)}'|">
+        셔츠
+    </button>
+    <button th:class="(${category}=='PANT') ? 'btn btn-secondary btn-sm mt-2' : 'btn btn-danger btn-sm mt-2'"
+            th:onclick="|location.href='@{/item/list(store=${store}, saleName=${saleName}, sortBy=${sortBy}, category=PANT)}'|">
+        바지
+    </button>
+    <button th:class="(${category}=='SKIRT') ? 'btn btn-secondary btn-sm mt-2' : 'btn btn-danger btn-sm mt-2'"
+            th:onclick="|location.href='@{/item/list(store=${store}, saleName=${saleName}, sortBy=${sortBy}, category=SKIRT)}'|">
+        치마
+    </button>
+    <button th:class="(${category}=='SHOE') ? 'btn btn-secondary btn-sm mt-2' : 'btn btn-danger btn-sm mt-2'"
+            th:onclick="|location.href='@{/item/list(store=${store}, saleName=${saleName}, sortBy=${sortBy}, category=SHOE)}'|">
+        신발
+    </button>
+    <button th:class="(${category}=='ACC') ? 'btn btn-secondary btn-sm mt-2' : 'btn btn-danger btn-sm mt-2'"
+            th:onclick="|location.href='@{/item/list(store=${store}, saleName=${saleName}, sortBy=${sortBy}, category=ACC)}'|">
+        악세사리
+    </button>
+</div>
+<!-- 상품 리스트 테이블 -->
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">사입 날짜</th>
+        <th scope="col">상점명</th>
+        <th scope="col">구매명</th>
+        <th scope="col">판매명</th>
+        <th scope="col">색상</th>
+        <th scope="col">카테고리</th>
+        <th scope="col">사이즈</th>
+        <th scope="col">성별</th>
+        <th scope="col">구매량</th>
+        <th scope="col">원가</th>
+        <th scope="col">판매가</th>
+        <th scope="col">재고량</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item : ${itemList}">
+        <td th:text="${item.purchaseDate}"></td>
+        <td th:text="${item.store}"></td>
+        <td><a th:href="@{/item/list/{id}(id = ${item.id})}" th:text="${item.buyName}"></a></td>
+        <td><a th:href="@{/item/list/{id}(id = ${item.id})}" th:text="${item.saleName}"></a></td>
+        <td th:text="${item.color}"></td>
+        <td th:text="${item.category.getDescription()}"></td>
+        <td th:text="${item.size.getDescription()}"></td>
+        <td th:text="${item.gender.getDescription()}"></td>
+        <td th:text="${item.quantity}"></td>
+        <td th:text="${item.unitCost}"></td>
+        <td th:text="${item.price}"></td>
+        <td th:text="${item.stock}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- 페이징 -->
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center"
+        th:with="start=${T(java.lang.Math).floor(itemList.number/10)*10 + 1},
+                  last=(${start + 9 < itemList.totalPages ? start + 9 : itemList.totalPages})">
+        <li class="page-item">
+            <a class="page-link"
+               th:href="@{${#request.getRequestURI()}(page=1, store=${store}, saleName=${saleName}, category=${category}, sortBy=${sortBy})}"
+               aria-label="First">
+                <span aria-hidden="true">First</span>
+            </a>
+        </li>
+
+        <li class="page-item" th:class="${itemList.isFirst()} ? 'disabled'">
+            <a class="page-link"
+               th:href="${itemList.isFirst()} ? '#' : @{${#request.getRequestURI()}(page=${itemList.number}, store=${store}, saleName=${saleName}, category=${category}, sortBy=${sortBy})}"
+               aria-label="Previous">
+                <span aria-hidden="true">&lt;</span>
+            </a>
+        </li>
+
+        <li class="page-item" th:each="page: ${#numbers.sequence(start, last)}"
+            th:class="${page == itemList.number + 1} ? 'active'">
+            <a class="page-link" th:text="${page}"
+               th:href="@{${#request.getRequestURI()}(page=${page}, store=${store}, saleName=${saleName}, category=${category}, sortBy=${sortBy})}"></a>
+        </li>
+
+        <li class="page-item" th:class="${itemList.last} ? 'disabled'">
+            <a class="page-link"
+               th:href="${itemList.last} ? '#' : @{${#request.getRequestURI()}(page=${itemList.number + 2}, store=${store}, saleName=${saleName}, category=${category}, sortBy=${sortBy})}"
+               aria-label="Next">
+                <span aria-hidden="true">&gt;</span>
+            </a>
+        </li>
+
+        <li class="page-item">
+            <a class="page-link"
+               th:href="@{${#request.getRequestURI()}(page=${itemList.totalPages}, store=${store}, saleName=${saleName}, category=${category}, sortBy=${sortBy})}"
+               aria-label="Last">
+                <span aria-hidden="true">Last</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+</body>
+</html>
