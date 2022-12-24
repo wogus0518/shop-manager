@@ -3,11 +3,13 @@ package com.palchil.shop.controller;
 
 import com.palchil.shop.domain.dto.item.ItemDto;
 import com.palchil.shop.domain.entity.Item;
+import com.palchil.shop.domain.entity.Order;
 import com.palchil.shop.domain.enumerate.Category;
 import com.palchil.shop.domain.enumerate.Gender;
 import com.palchil.shop.domain.enumerate.Size;
 import com.palchil.shop.domain.dto.item.AddItemDto;
 import com.palchil.shop.service.ItemService;
+import com.palchil.shop.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -28,6 +30,7 @@ import java.util.Enumeration;
 public class ItemController {
 
     private final ItemService itemService;
+    private final OrderService orderService;
 
     @GetMapping("/add")
     public String addView(Model model) {
@@ -82,10 +85,21 @@ public class ItemController {
         return "adminPage/itemUpdate";
     }
 
+    @GetMapping("/order/{id}")
+    public String itemOrder(@PathVariable Long id, Model model) {
+        orderService.order(id);
+        Item item = itemService.findOne(id);
+        model.addAttribute("item", item);
+
+        addAttributeEnum(model);
+
+        return "redirect:/item/list/" + id;
+    }
+
     @PostMapping("/modify/{id}")
-    public String update(@PathVariable Long id, ItemDto itemDto) {
+    public String updateItem(@PathVariable Long id, ItemDto itemDto) {
         itemDto.setId(id);
-        itemService.update(itemDto);
+        itemService.updateItem(itemDto);
 
         return "redirect:/item/list/" + id;
     }

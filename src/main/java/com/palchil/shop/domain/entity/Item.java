@@ -1,5 +1,6 @@
 package com.palchil.shop.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.palchil.shop.domain.dto.item.ItemDto;
 import com.palchil.shop.domain.enumerate.Category;
 import com.palchil.shop.domain.enumerate.Gender;
@@ -8,6 +9,8 @@ import com.palchil.shop.exception.NotEnoughStockException;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -18,6 +21,7 @@ import javax.persistence.*;
 public class Item {
 
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "item_id")
     private Long id;
     private String purchaseDate;
     private String store;
@@ -41,6 +45,11 @@ public class Item {
     private Integer stock;
     private Integer unitCost;
     private Integer price;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "item")
+    private List<Order> orders = new ArrayList<>();
+
 
     public void setBase64(String base64) {
         this.base64 = base64;

@@ -55,14 +55,13 @@ public class ItemService {
     }
 
     @Transactional
-    public Item update(ItemDto itemDto) {
+    public Item updateItem(ItemDto itemDto) {
         Optional<Item> optionalItem = itemRepository.findById(itemDto.getId());
         itemDto.setBase64(optionalItem.get().getBase64());
         Item item = itemDto.toEntity();
         log.info("item={}", item.toString());
         return itemRepository.save(itemDto.toEntity());
     }
-
 
 
     public Page<Item> findAll(Pageable pageable) {
@@ -77,19 +76,6 @@ public class ItemService {
         Optional<Item> optionalItem = itemRepository.findById(id);
         return optionalItem.get();
     }
-
-    public Page<Item> findBySaleName(String saleName, Pageable pageable) {
-        return itemRepository.findBySaleNameContaining(pageable, saleName);
-    }
-
-    public Page<Item> findBySaleNameAndStore(Pageable pageable, String saleName, String store) {
-        return itemRepository.findBySaleNameContainingAndStoreContaining(pageable, saleName, store);
-    }
-
-    public Page<Item> findByStore(String store, Pageable pageable) {
-        return itemRepository.findByStoreContaining(pageable, store);
-    }
-
 
     private List<AddItemDto> parser(AddItemDto addItemDto) {
         List<AddItemDto> list = new ArrayList<>();

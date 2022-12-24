@@ -117,7 +117,7 @@
 
     <div class="text-center">
         <button class="w-50 btn btn-success btn-lg my-2"
-                th:onclick="|location.href='@{/item/list}'|" type="button">
+                th:onclick="|location.href='@{/item/order/{id}(id=${item.id})}'|" type="button">
             판매
         </button>
         <button class="w-50 btn btn-warning btn-lg my-2"

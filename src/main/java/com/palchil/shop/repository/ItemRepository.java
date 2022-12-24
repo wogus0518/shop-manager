@@ -26,10 +26,4 @@ public interface ItemRepository extends JpaRepository<Item, Long>, JpaSpecificat
                                 @Param("size") Size size,
                                 @Param("unitCost") Integer unitCost);
 
-    Page<Item> findBySaleNameContaining(Pageable pageable, String saleName);
-
-    Page<Item> findByStoreContaining(Pageable pageable, String store);
-
-    Page<Item> findBySaleNameContainingAndStoreContaining(Pageable pageable, String saleName, String store);
-
 }

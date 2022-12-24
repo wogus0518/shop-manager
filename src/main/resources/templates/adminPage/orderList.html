@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html th:replace="~{template/layoutExtend/layoutFile :: layout(~{::body})}" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+<!-- 상품 리스트 테이블 -->
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">판매일</th>
+        <th scope="col">판매명</th>
+        <th scope="col">판매가</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="order : ${orders}">
+        <td th:text="${order.getOrderDate()}"></td>
+        <td th:text="${order.getItem().saleName}"></td>
+        <td th:text="${order.getItem().price}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- 페이징 -->
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center"
+        th:with="start=${T(java.lang.Math).floor(orders.number/10)*10 + 1},
+                  last=(${start + 9 < orders.totalPages ? start + 9 : orders.totalPages})">
+        <li class="page-item">
+            <a class="page-link"
+               th:href="@{${#request.getRequestURI()}(page=1)}"
+               aria-label="First">
+                <span aria-hidden="true">First</span>
+            </a>
+        </li>
+
+        <li class="page-item" th:class="${orders.isFirst()} ? 'disabled'">
+            <a class="page-link"
+               th:href="${orders.isFirst()} ? '#' : @{${#request.getRequestURI()}(page=${orders.number})}"
+               aria-label="Previous">
+                <span aria-hidden="true">&lt;</span>
+            </a>
+        </li>
+
+        <li class="page-item" th:each="page: ${#numbers.sequence(start, last)}"
+            th:class="${page == orders.number + 1} ? 'active'">
+            <a class="page-link" th:text="${page}"
+               th:href="@{${#request.getRequestURI()}(page=${page})}"></a>
+        </li>
+
+        <li class="page-item" th:class="${orders.last} ? 'disabled'">
+            <a class="page-link"
+               th:href="${orders.last} ? '#' : @{${#request.getRequestURI()}(page=${orders.number + 2})}"
+               aria-label="Next">
+                <span aria-hidden="true">&gt;</span>
+            </a>
+        </li>
+
+        <li class="page-item">
+            <a class="page-link"
+               th:href="@{${#request.getRequestURI()}(page=${orders.totalPages})}"
+               aria-label="Last">
+                <span aria-hidden="true">Last</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+</body>
+</html>
