@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class OrderController {
 
     private final OrderService orderService;
-    private final ItemService itemService;
 
     @GetMapping("/list")
     public String orderList(Model model, Pageable pageable) {
