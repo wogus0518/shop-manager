@@ -2,6 +2,16 @@
 <html th:replace="~{template/layoutExtend/layoutFile :: layout(~{::body})}" xmlns:th="http://www.thymeleaf.org">
 
 <body>
+<form class="row g-3" th:action method="POST">
+    <div class="col-auto">
+        <label for="datepicker" class="visually-hidden">판매 날짜</label>
+        <input type="text" class="form-control" id="datepicker" placeholder="판매 날짜" name="date">
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary mb-3">조회</button>
+    </div>
+</form>
+
 <!-- 상품 리스트 테이블 -->
 <table class="table">
     <thead>

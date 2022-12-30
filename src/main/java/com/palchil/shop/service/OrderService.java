@@ -10,6 +10,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -32,5 +35,12 @@ public class OrderService {
 
     public Page<Order> findAll(Pageable pageable) {
         return orderRepository.findAll(pageable);
+    }
+
+    public Page<Order> findByDate(String date, Pageable pageable) {
+        String[] dates = date.split("/");
+        LocalDate newDate = LocalDate.of(Integer.parseInt(dates[2]), Integer.parseInt(dates[0]), Integer.parseInt(dates[1]));
+        System.out.println("newDate = " + newDate);
+        return orderRepository.findByOrderDateContaining(newDate, pageable);
     }
 }
