@@ -46,9 +46,6 @@ public class Item {
     private Integer unitCost;
     private Integer price;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "item")
-    private List<Order> orders = new ArrayList<>();
 
 
     public void setBase64(String base64) {

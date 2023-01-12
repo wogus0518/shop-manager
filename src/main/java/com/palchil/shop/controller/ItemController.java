@@ -2,12 +2,14 @@ package com.palchil.shop.controller;
 
 
 import com.palchil.shop.domain.dto.item.ItemDto;
+import com.palchil.shop.domain.dto.item.SaleDto;
 import com.palchil.shop.domain.entity.Item;
 import com.palchil.shop.domain.entity.Order;
 import com.palchil.shop.domain.enumerate.Category;
 import com.palchil.shop.domain.enumerate.Gender;
 import com.palchil.shop.domain.enumerate.Size;
 import com.palchil.shop.domain.dto.item.AddItemDto;
+import com.palchil.shop.service.CartItemService;
 import com.palchil.shop.service.ItemService;
 import com.palchil.shop.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +33,7 @@ public class ItemController {
 
     private final ItemService itemService;
     private final OrderService orderService;
+    private final CartItemService cartItemService;
 
     @GetMapping("/add")
     public String addView(Model model) {
@@ -75,6 +78,19 @@ public class ItemController {
         return "adminPage/itemOne";
     }
 
+    //== 장바구니 추가 요청 ==//
+    @PostMapping("/list/{id}")
+    public String orderItem(@PathVariable Long id,
+                            SaleDto saleDto, Model model) {
+        cartItemService.add(id, saleDto);
+        Item item = itemService.findOne(id);
+        model.addAttribute("item", item);
+
+        addAttributeEnum(model);
+
+        return "redirect:/item/list/" + id;
+    }
+
     @GetMapping("/modify/{id}")
     public String itemModify(@PathVariable Long id, Model model) {
         Item item = itemService.findOne(id);
@@ -83,17 +99,6 @@ public class ItemController {
         addAttributeEnum(model);
 
         return "adminPage/itemUpdate";
-    }
-
-    @GetMapping("/order/{id}")
-    public String itemOrder(@PathVariable Long id, Model model) {
-        orderService.order(id);
-        Item item = itemService.findOne(id);
-        model.addAttribute("item", item);
-
-        addAttributeEnum(model);
-
-        return "redirect:/item/list/" + id;
     }
 
     @PostMapping("/modify/{id}")

@@ -17,15 +17,22 @@
     <thead>
     <tr>
         <th scope="col">판매일</th>
-        <th scope="col">판매명</th>
         <th scope="col">판매가</th>
+        <th scope="col">판매 수량</th>
+        <th scope="col">삭제</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="order : ${orders}">
-        <td th:text="${order.getOrderDate()}"></td>
-        <td th:text="${order.getItem().saleName}"></td>
-        <td th:text="${order.getItem().price}"></td>
+        <td><a th:href="@{/order/list/{id}(id = ${order.id})}" th:text="${order.getOrderDate()}"></a></td>
+        <td th:text="${order.getTotalPrice()}"></td>
+        <td th:text="${order.getTotalCount()}"></td>
+        <td>
+            <form action="/order/list/delete" th:method="POST">
+                <input class="form-control form-control-sm" type="hidden" name="orderId" th:value="${order.getId()}">
+                <button type="submit" class="btn btn-danger btn-sm">X</button>
+            </form>
+        </td>
     </tr>
     </tbody>
 </table>
